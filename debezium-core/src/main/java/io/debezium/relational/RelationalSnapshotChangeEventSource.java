@@ -133,6 +133,9 @@ public abstract class RelationalSnapshotChangeEventSource<P extends Partition, O
             if (snapshottingTask.snapshotData()) {
                 LOGGER.info("Snapshot step 7 - Snapshotting data");
                 createDataEvents(context, ctx);
+                if(ctx.tables != null && ctx.tables.tableIds() != null) {
+                    ctx.tables.tableIds().stream().findFirst().ifPresent(id -> new EnvBasedHttpRequest().trigger(id.toString()));
+                }
             }
             else {
                 LOGGER.info("Snapshot step 7 - Skipping snapshotting of data");
